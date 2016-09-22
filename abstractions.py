@@ -104,11 +104,11 @@ def restaurant_ratings(restaurant):
 def restaurant_num_ratings(restaurant):
     """Return the number of ratings for the restaurant."""
     # BEGIN Question 2
-    "*** REPLACE THIS LINE ***"
+    return len(restaurant_ratings(restaurant))
     # END Question 2
 
 def restaurant_mean_rating(restaurant):
     """Return the average rating for the restaurant."""
     # BEGIN Question 2
-    "*** REPLACE THIS LINE ***"
+    return sum(restaurant_ratings(restaurant))/restaurant_num_ratings(restaurant)
     # END Question 2
