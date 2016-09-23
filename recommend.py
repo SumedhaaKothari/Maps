@@ -98,6 +98,19 @@ def find_predictor(user, restaurants, feature_fn):
     user -- A user
     restaurants -- A sequence of restaurants
     feature_fn -- A function that takes a restaurant and returns a number
+
+    One method of computing these values is by calculating the sums of squares, S_xx, S_yy, and S_xy:
+
+    Sxx = Σi (xi - mean(x))2
+    Syy = Σi (yi - mean(y))2
+    Sxy = Σi (xi - mean(x)) (yi - mean(y))
+
+After calculating the sums of squares, the regression coefficients (a and b) and r_squared are defined as follows:
+
+    b = Sxy / Sxx
+    a = mean(y) - b * mean(x)
+    R2 = Sxy2 / (Sxx Syy)
+
     """
     reviews_by_user = {review_restaurant_name(review): review_rating(review)
                        for review in user_reviews(user).values()}
@@ -106,8 +119,13 @@ def find_predictor(user, restaurants, feature_fn):
     ys = [reviews_by_user[restaurant_name(r)] for r in restaurants]
 
     # BEGIN Question 7
-    "*** REPLACE THIS LINE ***"
-    b, a, r_squared = 0, 0, 0  # REPLACE THIS LINE WITH YOUR SOLUTION
+    s_xx = sum([(x-mean(xs))**2 for x in xs])
+    s_yy = sum([(y-mean(ys))**2 for y in ys])
+    s_xy = sum([(xs[i]-mean(xs))*(ys[i]-mean(ys)) for i in range(len(xs))])
+
+    b = s_xy/s_xx
+    a = mean(ys) - b * mean(xs)
+    r_squared = s_xy**2 / (s_xx*s_yy)
     # END Question 7
 
     def predictor(restaurant):
@@ -127,7 +145,14 @@ def best_predictor(user, restaurants, feature_fns):
     """
     reviewed = user_reviewed_restaurants(user, restaurants)
     # BEGIN Question 8
-    "*** REPLACE THIS LINE ***"
+    max_val = 0
+    max_fn = 0
+    for fn in feature_fns:
+        r2 = find_predictor(user, restaurants, fn)[1]
+        if r2 > max_val:
+            max_fn = fn
+            max_val = r2
+    return find_predictor(user,restaurants, max_fn)[0]
     # END Question 8
 
 
