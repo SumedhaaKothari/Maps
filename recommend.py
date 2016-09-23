@@ -63,7 +63,7 @@ def group_by_centroid(restaurants, centroids):
 def find_centroid(cluster):
     """Return the centroid of the locations of the restaurants in cluster."""
     # BEGIN Question 5
-    "*** REPLACE THIS LINE ***"
+    return [sum(restaurant_location(r)[0] for r in cluster)/len(cluster),sum([restaurant_location(r)[1] for r in cluster])/len(cluster)]
     # END Question 5
 
 
