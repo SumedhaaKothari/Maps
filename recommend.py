@@ -118,6 +118,8 @@ After calculating the sums of squares, the regression coefficients (a and b) and
     xs = [feature_fn(r) for r in restaurants]
     ys = [reviews_by_user[restaurant_name(r)] for r in restaurants]
 
+#    print (xs,ys)
+
     # BEGIN Question 7
     s_xx = sum([(x-mean(xs))**2 for x in xs])
     s_yy = sum([(y-mean(ys))**2 for y in ys])
@@ -144,15 +146,18 @@ def best_predictor(user, restaurants, feature_fns):
     feature_fns -- A sequence of functions that each takes a restaurant
     """
     reviewed = user_reviewed_restaurants(user, restaurants)
+#    assert len(reviewed)==0,reviewed
     # BEGIN Question 8
     max_val = 0
     max_fn = 0
     for fn in feature_fns:
-        r2 = find_predictor(user, restaurants, fn)[1]
+#        print (reviewed)
+        r2 = find_predictor(user, reviewed, fn)[1]
         if r2 > max_val:
             max_fn = fn
             max_val = r2
-    return find_predictor(user,restaurants, max_fn)[0]
+ #   print ("out")
+    return find_predictor(user,reviewed, max_fn)[0]
     # END Question 8
 
 
@@ -165,10 +170,18 @@ def rate_all(user, restaurants, feature_fns):
     restaurants -- A list of restaurants
     feature_fns -- A sequence of feature functions
     """
-    predictor = best_predictor(user, ALL_RESTAURANTS, feature_fns)
+    pred = best_predictor(user, ALL_RESTAURANTS, feature_fns)
     reviewed = user_reviewed_restaurants(user, restaurants)
     # BEGIN Question 9
-    "*** REPLACE THIS LINE ***"
+    ratings = {}
+    reviews = user_reviews(user)
+    for r in restaurants:
+        rated = False
+        if restaurant_name(r) in reviews.keys():
+             ratings[restaurant_name(r)] = user_rating(user,restaurant_name(r))
+        else:
+           ratings[restaurant_name(r)] = pred(r)
+    return ratings
     # END Question 9
 
 
